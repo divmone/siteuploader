@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Site Uploader</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon" aria-hidden="true">⇄</span><span>Site Uploader<small>Файлы по SFTP</small></span></div>
+    <div class="profiles-head"><h2>Сайты</h2><button id="new-profile" class="side-button" type="button" title="Новый профиль" aria-label="Новый профиль">+</button></div>
+    <nav id="profiles" aria-label="Профили сайтов"></nav>
+    <div class="sidebar-footer"><button class="plain" id="quit" type="button">Завершить работу</button></div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div class="top-title"><p class="eyebrow" id="section-label">Сервер</p><h1 id="page-title">Подключение</h1></div>
+      <div class="top-actions"><span class="connection-pill" id="connection-state"><i></i>Отключено</span><button id="disconnect" hidden>Отключиться</button></div>
+    </header>
+    <div class="content">
+      <p class="notice" id="notice" role="status" hidden></p>
+      <section id="setup" class="panel setup" aria-label="Настройки подключения">
+        <form id="connection-form">
+          <div class="fields">
+            <label class="host-field">IP или имя сервера<input id="host" required placeholder="server.example.com" spellcheck="false" autocomplete="off"></label>
+            <label>Порт SSH<input id="port" type="number" inputmode="numeric" min="1" max="65535" value="22" required></label>
+            <label>Пользователь SSH<input id="user" required placeholder="Имя пользователя" autocomplete="username"></label>
+            <label>Пароль SSH или ключа<input id="secret" type="password" autocomplete="current-password"></label>
+            <label class="full">Папка на сервере<input id="start-dir" placeholder="Домашняя папка пользователя" spellcheck="false"></label>
+            <label class="full">Путь к закрытому SSH-ключу <span class="optional">по желанию</span><input id="key-path" placeholder="Абсолютный путь на этом компьютере" spellcheck="false"></label>
+          </div>
+          <label class="checkbox"><input id="remember" type="checkbox">Запомнить пароль при сохранении профиля</label>
+          <div class="setup-actions">
+            <button type="submit" class="primary">Подключиться</button><button type="button" id="save-profile">Сохранить профиль…</button><button type="button" class="plain danger" id="delete-profile" hidden>Удалить профиль</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="workspace" hidden aria-label="Файлы сервера">
+        <div class="panel files" id="file-drop">
+          <form id="path-form" class="path-row">
+            <button id="up" type="button" title="На уровень выше" aria-label="На уровень выше">↑</button>
+            <input id="remote-path" aria-label="Путь на сервере" spellcheck="false" placeholder="Путь на сервере">
+            <button type="submit">Перейти</button><button id="refresh" type="button" title="Обновить" aria-label="Обновить">↻</button>
+          </form>
+          <div class="toolbar">
+            <button class="primary" id="upload" type="button">↑ Загрузить</button>
+            <button id="mkdir" type="button">+ Папка</button>
+            <label class="search"><span aria-hidden="true">⌕</span><input id="search" placeholder="Поиск по папке" aria-label="Поиск по папке" type="search"></label>
+            <input type="file" id="file-input" multiple hidden>
+          </div>
+          <div class="table-scroll" id="table-wrap">
+            <table aria-label="Файлы в текущей папке"><thead><tr><th scope="col">Имя</th><th scope="col">Размер</th><th scope="col">Изменён</th></tr></thead><tbody id="file-list"></tbody></table>
+            <div class="empty" id="empty" hidden><span aria-hidden="true" class="folder-icon"></span><strong id="empty-text"></strong></div>
+          </div>
+          <div id="selection-bar" class="selection-bar" hidden>
+            <strong id="selection-name"></strong>
+            <button id="open-file" type="button">Открыть</button><button id="download" type="button">Скачать</button><button id="edit" type="button">Редактировать</button>
+            <button id="move" type="button">Переместить / переименовать</button><button class="danger" id="remove" type="button">Удалить</button>
+          </div>
+          <footer class="files-footer"><span id="count"></span><span>Перетащите файлы сюда для загрузки</span></footer>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="prompt">
+    <form method="dialog">
+      <h2 id="prompt-title"></h2><p id="prompt-detail"></p><input id="prompt-input" autocomplete="off" spellcheck="false" aria-labelledby="prompt-title">
+      <div class="dialog-actions"><button value="cancel" formnovalidate>Отмена</button><button class="primary" id="prompt-ok" value="ok">Готово</button></div>
+    </form>
+  </dialog>
+  <dialog id="editor" class="editor">
+    <div class="editor-head"><h2 id="editor-name"></h2><span class="optional">UTF-8</span></div>
+    <textarea id="editor-text" spellcheck="false" aria-label="Содержимое файла"></textarea>
+    <p id="editor-error" class="editor-error" role="alert" hidden></p>
+    <div class="dialog-actions"><button id="editor-close" type="button">Закрыть</button><button class="primary" id="editor-save" type="button">Сохранить на сервер</button></div>
+  </dialog>
+</body>
+</html>
